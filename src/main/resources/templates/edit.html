@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User - Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            margin-right: 10px;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        .form-actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .password-info {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Изменнения пользователя</h1>
+
+    <form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
+        <input type="hidden" name="_method" value="patch">
+
+        <div class="form-group">
+            <label for="username">Имя</label>
+            <input type="text" th:field="*{username}" id="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="surname">Фамилия</label>
+            <input type="text" th:field="*{surname}" id="surname" required>
+        </div>
+
+        <div class="form-group">
+            <label for="age">Возраст</label>
+            <input type="number" th:field="*{age}" id="age" min="1" max="120" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" name="password" id="password" placeholder="Leave blank to keep current">
+            <p class="password-info">Leave password field blank if you don't want to change it</p>
+        </div>
+
+        <div class="form-group">
+            <label>Roles</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item" th:each="role : ${roles}">
+                    <input type="checkbox" name="roles" th:value="${role.getId()}"
+                           th:id="${'role_' + role.getId()}" th:checked="${#lists.contains(user.roles, role)}">
+                    <label th:for="${'role_' + role.getId()}" th:text="${role.getRole()}"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a th:href="@{/admin}" class="btn btn-back">Вернутся к списку</a>
+            <button type="submit" class="btn">Обновить пользователя</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка в системе</title>
+    <style>
+        :root {
+            --error-color: #e74c3c;
+            --error-light: #fadbd8;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--error-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: var(--error-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            background-color: var(--error-light);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-secondary {
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f0f0f0;
+        }
+
+        @media (max-width: 600px) {
+            .error-container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h1>Произошла ошибка</h1>
+
+    <div class="error-message">
+        <p th:text="${message} ?: 'При обработке вашего запроса возникла непредвиденная ошибка.'"></p>
+        <p th:if="${error}" th:text="${error}" style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;"></p>
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn btn-primary">На главную</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">Вернуться назад</a>
+    </div>
+</div>
+</body>
+</html>

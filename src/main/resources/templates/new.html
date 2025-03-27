@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New User - Admin Panel</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-hover: #2980b9;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
+            --border-color: #ced4da;
+            --text-color: #495057;
+            --bg-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-item {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            margin-right: 0.75rem;
+            width: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Create New User</h1>
+
+        <form th:method="POST" th:action="@{/admin}" th:object="${user}" id="userForm">
+            <div class="form-group">
+                <label for="username">First Name</label>
+                <input type="text" th:field="*{username}" id="username" required
+                       minlength="2" maxlength="50" placeholder="Enter first name">
+                <div class="error-message" th:if="${#fields.hasErrors('username')}"
+                     th:errors="*{username}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="surname">Last Name</label>
+                <input type="text" th:field="*{surname}" id="surname" required
+                       minlength="2" maxlength="50" placeholder="Enter last name">
+                <div class="error-message" th:if="${#fields.hasErrors('surname')}"
+                     th:errors="*{surname}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" th:field="*{age}" id="age" required
+                       min="18" max="120" placeholder="Enter age">
+                <div class="error-message" th:if="${#fields.hasErrors('age')}"
+                     th:errors="*{age}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" th:field="*{password}" id="password" required
+                       minlength="6" placeholder="Enter password">
+                <div class="password-strength">Password must be at least 6 characters</div>
+                <div class="error-message" th:if="${#fields.hasErrors('password')}"
+                     th:errors="*{password}"></div>
+            </div>
+
+            <div class="checkbox-group">
+                <label>Roles</label>
+                <div th:each="role : ${roles}" class="checkbox-item">
+                    <input type="checkbox" name="roles" th:value="${role.getId()}"
+                           th:id="${'role_' + role.getId()}" th:checked="${#lists.contains(user.roles, role)}">
+                    <label th:for="${'role_' + role.getId()}" th:text="${role.getRole()}"></label>
+                </div>
+                <div class="error-message" th:if="${#fields.hasErrors('roles')}"
+                     th:errors="*{roles}"></div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/admin}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Client-side validation for better UX
+    document.getElementById('userForm').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters long');
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>
